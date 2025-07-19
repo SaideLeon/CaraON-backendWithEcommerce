@@ -8,6 +8,8 @@ const authRoutes = require('./api/auth.routes');
 const instanceRoutes = require('./api/instances.routes');
 const organizationRoutes = require('./api/organization.routes');
 const agentRoutes = require('./api/agent.routes');
+const productRoutes = require('./api/products.routes');
+const cartRoutes = require('./api/cart.routes');
 const webSocketService = require('./services/websocket.service');
 const { generateOpenApi } = require('./docs/openapi');
 
@@ -30,6 +32,8 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1', instanceRoutes);
 app.use('/api/v1', organizationRoutes);
 app.use('/api/v1', agentRoutes);
+app.use('/api/v1', productRoutes);
+app.use('/api/v1', cartRoutes);
  
 
 generateOpenApi(app);
