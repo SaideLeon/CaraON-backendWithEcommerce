@@ -2,56 +2,56 @@ const { z } = require('zod');
 
 const updateAgentPersonaSchema = z.object({
     body: z.object({
-        persona: z.string().min(10, 'A persona precisa ter no mínimo 10 caracteres.').openapi({ description: 'Nova persona do agente' }),
-    }).openapi({ description: 'Dados para atualização da persona do agente' }),
+        persona: z.string().min(10, 'A persona precisa ter no mínimo 10 caracteres.'),
+    }),
     params: z.object({
-        agentId: z.string().openapi({ description: 'ID do agente' }),
+        agentId: z.string(),
     })
 });
 
 const createParentAgentSchema = z.object({
     body: z.object({
-        name: z.string().min(3, 'O nome do agente precisa ter no mínimo 3 caracteres.').openapi({ description: 'Nome do agente pai' }),
-        persona: z.string().min(10, 'A persona precisa ter no mínimo 10 caracteres.').openapi({ description: 'Persona do agente pai orquestrador' }),
+        name: z.string().min(3, 'O nome do agente precisa ter no mínimo 3 caracteres.'),
+        persona: z.string().min(10, 'A persona precisa ter no mínimo 10 caracteres.'),
     }),
     params: z.object({
-        instanceId: z.string().openapi({ description: 'ID da instância' }),
-        organizationId: z.string().optional().openapi({ description: 'ID da organização (opcional)' }),
+        instanceId: z.string(),
+        organizationId: z.string().optional(),
     }),
 });
 
 const createChildAgentFromTemplateSchema = z.object({
     body: z.object({
-        name: z.string().min(3, 'O nome do agente precisa ter no mínimo 3 caracteres.').openapi({ description: 'Nome do agente filho' }),
-        templateId: z.string().openapi({ description: 'ID do template de agente' }),
-        customPersona: z.string().optional().openapi({ description: 'Persona customizada para o agente filho (sobrescreve a do template)' }),
+        name: z.string().min(3, 'O nome do agente precisa ter no mínimo 3 caracteres.'),
+        templateId: z.string(),
+        customPersona: z.string().optional(),
     }),
     params: z.object({
-        parentAgentId: z.string().openapi({ description: 'ID do agente pai' }),
+        parentAgentId: z.string(),
     }),
 });
 
 const createCustomChildAgentSchema = z.object({
     body: z.object({
-        name: z.string().min(3, 'O nome do agente precisa ter no mínimo 3 caracteres.').openapi({ description: 'Nome do agente filho' }),
-        persona: z.string().min(10, 'A persona precisa ter no mínimo 10 caracteres.').openapi({ description: 'Persona do agente filho' }),
-        toolIds: z.array(z.string()).optional().openapi({ description: 'Array de IDs das ferramentas a serem associadas' }),
+        name: z.string().min(3, 'O nome do agente precisa ter no mínimo 3 caracteres.'),
+        persona: z.string().min(10, 'A persona precisa ter no mínimo 10 caracteres.'),
+        toolIds: z.array(z.string()).optional(),
     }),
     params: z.object({
-        parentAgentId: z.string().openapi({ description: 'ID do agente pai' }),
+        parentAgentId: z.string(),
     }),
 });
 
 const listChildAgentsSchema = z.object({
     params: z.object({
-        parentAgentId: z.string().openapi({ description: 'ID do agente pai para listar os filhos' }),
+        parentAgentId: z.string(),
     }),
 });
 
 const exportAgentAnalyticsSchema = z.object({
     query: z.object({
-        instanceId: z.string().openapi({ description: 'ID da instância para exportar a análise' }),
-        organizationId: z.string().optional().openapi({ description: 'ID da organização (opcional)' }),
+        instanceId: z.string(),
+        organizationId: z.string().optional(),
     }),
 });
 

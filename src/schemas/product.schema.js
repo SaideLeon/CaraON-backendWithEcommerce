@@ -1,7 +1,11 @@
 const { z } = require('zod');
-const { ProductStatus } = require('@prisma/client');
+// const { ProductStatus } = require('@prisma/client');
+const productStatusEnum = z.enum(['DRAFT', 'ACTIVE', 'INACTIVE', 'ARCHIVED']);
+
+
 
 const productSchema = z.object({
+  id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'ID inválido'),
   name: z.string().min(3, 'O nome do produto precisa ter no mínimo 3 caracteres.'),
   slug: z.string().min(3, 'O slug do produto precisa ter no mínimo 3 caracteres.').regex(/^[a-z0-9-]+$/, 'O slug deve conter apenas letras minúsculas, números e hifens.'),
   description: z.string().optional(),
@@ -14,7 +18,7 @@ const productSchema = z.object({
   length: z.number().positive('O comprimento deve ser um número positivo.').optional(),
   width: z.number().positive('A largura deve ser um número positivo.').optional(),
   height: z.number().positive('A altura deve ser um número positivo.').optional(),
-  status: z.nativeEnum(ProductStatus).default(ProductStatus.DRAFT),
+  status: productStatusEnum.default('DRAFT'),
   isDigital: z.boolean().default(false),
   trackStock: z.boolean().default(true),
   stock: z.number().int().min(0, 'O estoque não pode ser negativo.').default(0),
@@ -26,6 +30,8 @@ const productSchema = z.object({
   tags: z.array(z.string()).optional(),
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
 });
 
 const createProductSchema = z.object({
@@ -46,7 +52,7 @@ const listProductsSchema = z.object({
     search: z.string().optional(),
     categoryId: z.string().optional(),
     brandId: z.string().optional(),
-    status: z.nativeEnum(ProductStatus).optional(),
+    status: productStatusEnum.optional(),
     featured: z.string().transform(val => val === 'true').optional(),
     minPrice: z.string().transform(Number).optional(),
     maxPrice: z.string().transform(Number).optional(),
@@ -56,8 +62,21 @@ const listProductsSchema = z.object({
 });
 
 
+// Schema for the paginated response
+const ProductListResponseSchema = z.object({
+  data: z.array(productSchema),
+  pagination: z.object({
+    total: z.number(),
+    page: z.number(),
+    limit: z.number(),
+    totalPages: z.number(),
+  }),
+});
+
 module.exports = {
   createProductSchema,
   updateProductSchema,
-  listProductsSchema
+  listProductsSchema,
+  productSchema,
+  ProductListResponseSchema,
 };

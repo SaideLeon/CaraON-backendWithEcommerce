@@ -1,5 +1,24 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const { z } = require('zod');
+
+const CartItemSchema = z.object({
+  productId: z.string(),
+  quantity: z.number(),
+  product: z.object({
+    id: z.string(),
+    name: z.string(),
+    slug: z.string(),
+    price: z.number(),
+    stock: z.number(),
+    images: z.array(z.object({ url: z.string(), alt: z.string().optional() })).optional(),
+  }).optional(),
+});
+
+const CartItemInputSchema = z.object({
+  productId: z.string(),
+  quantity: z.number(),
+}); 
 
 // Função auxiliar para calcular os totais do carrinho
 const calculateCartTotals = (cartItems) => {
@@ -118,7 +137,19 @@ exports.addToCart = async (req, res) => {
       });
     }
 
-    res.status(201).json(cartItem);
+    // Popula o campo 'product' no retorno
+    const cartItemWithProduct = {
+      ...cartItem,
+      product: {
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        price: product.price,
+        stock: product.stock,
+        images: product.images ? product.images.map(img => ({ url: img.url, alt: img.alt })) : []
+      }
+    };
+    res.status(201).json(cartItemWithProduct);
   } catch (error) {
     console.error('Erro ao adicionar ao carrinho:', error);
     res.status(500).json({ error: 'Falha ao adicionar o item ao carrinho.' });
@@ -155,7 +186,20 @@ exports.updateCart = async (req, res) => {
       data: { quantity },
     });
 
-    res.status(200).json(updatedItem);
+    // Popula o campo 'product' no retorno
+    const product = existingCartItem.product;
+    const updatedItemWithProduct = {
+      ...updatedItem,
+      product: product ? {
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        price: product.price,
+        stock: product.stock,
+        images: product.images ? product.images.map(img => ({ url: img.url, alt: img.alt })) : []
+      } : undefined
+    };
+    res.status(200).json(updatedItemWithProduct);
   } catch (error) {
     console.error('Erro ao atualizar o carrinho:', error);
     res.status(500).json({ error: 'Falha ao atualizar o item no carrinho.' });

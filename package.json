@@ -25,7 +25,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@asteasolutions/zod-to-openapi": "^7.3.4",
+    "@asteasolutions/zod-to-openapi": "^8.0.0",
     "@genkit-ai/ai": "^1.14.0",
     "@genkit-ai/core": "^1.14.0",
     "@genkit-ai/flow": "^0.5.17",
@@ -41,11 +41,11 @@
     "prisma": "^6.11.1",
     "puppeteer": "^24.12.1",
     "qrcode": "^1.5.4",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "whatsapp-web.js": "^1.31.0",
     "ws": "^8.18.3",
-    "wwebjs-mongo": "^1.1.0",
-    "zod": "^3.5.4"
+    "wwebjs-mongo": "^1.1.0"
   },
   "devDependencies": {
     "concurrently": "^9.2.0",

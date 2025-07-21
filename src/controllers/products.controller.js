@@ -1,5 +1,9 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const { z } = require('zod');
+ 
+const {  productSchema, ProductListResponseSchema } = require('../schemas/product.schema');
+ 
 
 exports.createProduct = async (req, res) => {
   const { ...productData } = req.body;

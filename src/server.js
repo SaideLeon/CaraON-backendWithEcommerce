@@ -3,18 +3,31 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const http = require('http');
-const { PrismaClient } = require('@prisma/client');
 const authRoutes = require('./api/auth.routes');
 const instanceRoutes = require('./api/instances.routes');
 const organizationRoutes = require('./api/organization.routes');
 const agentRoutes = require('./api/agent.routes');
 const productRoutes = require('./api/products.routes');
 const cartRoutes = require('./api/cart.routes');
+const templateRoutes = require('./api/template.routes');
 const webSocketService = require('./services/websocket.service');
-const { generateOpenApi } = require('./docs/openapi');
+
+// Swagger UI setup
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerSpec = swaggerJsdoc({
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'CaraON API',
+      version: '1.0.0',
+      description: 'Documentação da API CaraON',
+    },
+  },
+  apis: ['./src/api/*.js'], // You can add JSDoc comments to your route files for more details
+});
 
 const app = express();
-const prisma = new PrismaClient();
 
 app.use(cors());
 app.use(express.json());
@@ -27,16 +40,14 @@ mongoose.connect(process.env.MONGODB_SESSION_URI).then(() => {
   console.log('✅ Conectado ao MongoDB para sessões WhatsApp');
 });
 
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1', instanceRoutes);
 app.use('/api/v1', organizationRoutes);
 app.use('/api/v1', agentRoutes);
 app.use('/api/v1', productRoutes);
 app.use('/api/v1', cartRoutes);
- 
-
-generateOpenApi(app);
+app.use('/api/v1/templates', templateRoutes);
 
 const server = http.createServer(app);
 webSocketService.init(server);

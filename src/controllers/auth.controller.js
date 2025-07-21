@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 const { z } = require('zod');
-const { registry } = require('../docs/openapi');
 const { userRegistrationSchema, userLoginSchema } = require('../schemas/user.schema');
 
 const prisma = new PrismaClient();
@@ -16,39 +15,6 @@ const UserResponseSchema = z.object({
 
 const TokenResponseSchema = z.object({
   token: z.string(),
-});
-
-// Register route with OpenAPI
-registry.registerPath({
-  method: 'post',
-  path: '/auth/register',
-  summary: 'Registra um novo usuário',
-  tags: ['Auth'],
-  request: {
-    body: {
-      content: {
-        'application/json': {
-          schema: userRegistrationSchema.shape.body,
-        },
-      },
-    },
-  },
-  responses: {
-    201: {
-      description: 'Usuário criado com sucesso',
-      content: {
-        'application/json': {
-          schema: UserResponseSchema,
-        },
-      },
-    },
-    400: {
-      description: 'Dados de entrada inválidos',
-    },
-    409: {
-        description: 'Email já em uso',
-    }
-  },
 });
 
 exports.register = async (req, res) => {
@@ -68,39 +34,6 @@ exports.register = async (req, res) => {
     res.status(500).json({ error: 'Falha ao registrar o usuário.' });
   }
 };
-
-// Register route with OpenAPI
-registry.registerPath({
-    method: 'post',
-    path: '/auth/login',
-    summary: 'Autentica um usuário e retorna um token JWT',
-    tags: ['Auth'],
-    request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: userLoginSchema.shape.body,
-          },
-        },
-      },
-    },
-    responses: {
-      200: {
-        description: 'Login bem-sucedido',
-        content: {
-          'application/json': {
-            schema: TokenResponseSchema,
-          },
-        },
-      },
-      401: {
-        description: 'Credenciais inválidas',
-      },
-      404: {
-          description: 'Usuário não encontrado',
-      },
-    },
-  });
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
