@@ -71,7 +71,7 @@ async function startInstance(clientId) {
     puppeteer: {
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
       headless: true,
-      executablePath: process.env.CHROME_EXECUTABLE_PATH || '/usr/bin/google-chrome-stable',
+      executablePath: process.env.CHROME_EXECUTABLE_PATH,
     },
   });
 
