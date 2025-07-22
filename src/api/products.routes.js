@@ -274,7 +274,7 @@ const auth = require('../middlewares/auth.middleware');
  *                 minStock: 20
  *                 maxStock: 200
  *                 featured: true
- *                 categoryId: "clxkz2x1y0000i8uh7b2g5f5e"
+ *                 categoryId: "687ff9a2bcbad9eaf73eb33a"
  *                 brandId: "clxkz3a1b0002i8uhf4g9h9j9"
  *                 tags: ["smartphone", "samsung", "android", "s24 ultra"]
  *                 seoTitle: "Comprar Samsung Galaxy S24 Ultra | Loja Oficial"

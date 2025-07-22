@@ -35,7 +35,7 @@ const productSchema = z.object({
 });
 
 const createProductSchema = z.object({
-  body: productSchema,
+  body: productSchema.omit({ id: true, createdAt: true, updatedAt: true }),
 });
 
 const updateProductSchema = z.object({
