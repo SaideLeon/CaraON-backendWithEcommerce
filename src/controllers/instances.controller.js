@@ -1,8 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const whatsappService = require('../services/whatsapp.service');
-const { z } = require('zod');
-const { instanceActionSchema } = require('../schemas/instance.schema');
+const whatsappService = require('../services/whatsapp.service'); 
 
 exports.createInstance = async (req, res) => {
   const { name } = req.body;

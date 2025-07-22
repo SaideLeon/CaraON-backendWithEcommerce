@@ -7,34 +7,16 @@ const auth = require('../middlewares/auth.middleware');
 
 /**
  * @swagger
- * components:
- *   schemas:
- *     UpdateTemplate:
- *       type: object
- *       description: Campos para atualizar um template. Todos são opcionais.
- *       properties:
- *         name:
- *           type: string
- *         description:
- *           type: string
- *         category:
- *           type: string
- *         defaultPersona:
- *           type: string
- *         toolIds:
- *           type: array
- *           items:
- *             type: string
  * tags:
  *   name: Templates
- *   description: Gerenciamento de templates (moldes) de agentes.
+ *   description: Gerenciamento de templates de agentes.
  */
 
 /**
  * @swagger
  * /api/v1/templates:
  *   post:
- *     summary: Cria um novo template de agente personalizado
+ *     summary: Cria um novo template de agente
  *     tags: [Templates]
  *     security:
  *       - bearerAuth: []
@@ -43,26 +25,16 @@ const auth = require('../middlewares/auth.middleware');
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               description:
- *                 type: string
- *               category:
- *                 type: string
- *               defaultPersona:
- *                 type: string
- *               toolIds:
- *                 type: array
- *                 items:
- *                   type: string
- *           example:
- *             name: "Analisador de Sentimento"
- *             description: "Um agente que analisa o sentimento de textos."
- *             category: "Análise de Texto"
- *             defaultPersona: "Você é um especialista em análise de sentimento. Sua função é classificar textos como positivo, negativo ou neutro."
- *             toolIds: []
+ *             $ref: '#/components/schemas/CreateTemplate'
+ *           examples:
+ *             default:
+ *               summary: Exemplo de criação de Template
+ *               value:
+ *                 name: "Gestor de Recursos Humanos"
+ *                 description: "Um agente que gerencia recursos humanos da empresa."
+ *                 category: "Gerencia"
+ *                 defaultPersona: "Você é um especialista em recursos humanos. Sua função é gerenciar o bem-estar dos funcionários e resolver conflitos."
+ * 
  *     responses:
  *       201:
  *         description: Template criado com sucesso.
@@ -77,7 +49,7 @@ router.post('/', auth, validate(createTemplateSchema), templateController.create
  * @swagger
  * /api/v1/templates:
  *   get:
- *     summary: Lista todos os templates disponíveis (do sistema e do usuário)
+ *     summary: Lista todos os templates disponíveis
  *     tags: [Templates]
  *     security:
  *       - bearerAuth: []
@@ -119,7 +91,7 @@ router.get('/:templateId', auth, validate(templateIdParamSchema), templateContro
  * @swagger
  * /api/v1/templates/{templateId}:
  *   put:
- *     summary: Atualiza um template personalizado existente
+ *     summary: Atualiza um template existente
  *     tags: [Templates]
  *     security:
  *       - bearerAuth: []
@@ -136,14 +108,14 @@ router.get('/:templateId', auth, validate(templateIdParamSchema), templateContro
  *           schema:
  *             $ref: '#/components/schemas/UpdateTemplate'
  *           examples:
- *             update_persona:
- *               summary: Atualizando a Persona
+ *             default:
+ *               summary: Exemplo de Atualização de Template
  *               value:
- *                 defaultPersona: "Você é um especialista em análise de sentimento. Sua função é classificar textos como positivo, negativo ou neutro. Seja sempre formal e direto."
- *             add_tool:
- *               summary: Adicionando uma Ferramenta
- *               value:
- *                 toolIds: ["id_da_ferramenta_1", "id_da_nova_ferramenta_3"]
+ *                 name: "Gestor de Marketing"
+ *                 description: "Um agente que gerencia marketing da empresa."
+ *                 category: "Gerencia"
+ *                 defaultPersona: "Você é um especialista em marketing. Sua função monitorar o desempenho do funil de venda."
+ * 
  *     responses:
  *       200:
  *         description: Template atualizado com sucesso.
@@ -160,7 +132,7 @@ router.put('/:templateId', auth, validate(updateTemplateSchema), templateControl
  * @swagger
  * /api/v1/templates/{templateId}:
  *   delete:
- *     summary: Deleta um template personalizado
+ *     summary: Deleta um template
  *     tags: [Templates]
  *     security:
  *       - bearerAuth: []
@@ -173,8 +145,6 @@ router.put('/:templateId', auth, validate(updateTemplateSchema), templateControl
  *     responses:
  *       204:
  *         description: Template deletado com sucesso.
- *       400:
- *         description: Requisição inválida (ex: template em uso).
  *       401:
  *         description: Não autorizado.
  *       404:

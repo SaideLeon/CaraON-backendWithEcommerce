@@ -57,6 +57,8 @@ const { userRegistrationSchema, userLoginSchema } = require('../schemas/user.sch
  *         token:
  *           type: string
  *           description: O token JWT de autenticação.
+ *         user:
+ *           $ref: '#/components/schemas/UserResponse'
  * tags:
  *   name: Autenticação
  *   description: Endpoints para registro e login de usuários.

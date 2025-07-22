@@ -15,6 +15,7 @@ const UserResponseSchema = z.object({
 
 const TokenResponseSchema = z.object({
   token: z.string(),
+  user: UserResponseSchema,
 });
 
 exports.register = async (req, res) => {
@@ -44,5 +45,6 @@ exports.login = async (req, res) => {
   if (!valid) return res.status(401).json({ error: 'Senha incorreta' });
 
   const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
-  res.json({ token });
+  const { password: _, ...userWithoutPassword } = user;
+  res.json({ token, user: userWithoutPassword });
 };

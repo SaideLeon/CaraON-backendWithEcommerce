@@ -251,6 +251,34 @@ const auth = require('../middlewares/auth.middleware');
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Product'
+ *           examples:
+ *             samsungPhone:
+ *               summary: Exemplo de um celular Samsung
+ *               value:
+ *                 name: "Samsung Galaxy S24 Ultra"
+ *                 slug: "samsung-galaxy-s24-ultra"
+ *                 description: "O mais recente e poderoso smartphone da Samsung, com câmera de 200MP, S Pen integrada e o processador mais rápido da linha Galaxy."
+ *                 shortDescription: "Smartphone topo de linha com S Pen e câmera de 200MP."
+ *                 sku: "SS-S24-ULTRA-BLK"
+ *                 price: 7999.99
+ *                 comparePrice: 8999.99
+ *                 cost: 4500.00
+ *                 weight: 0.232
+ *                 length: 16.23
+ *                 width: 7.9
+ *                 height: 0.86
+ *                 status: "ACTIVE"
+ *                 isDigital: false
+ *                 trackStock: true
+ *                 stock: 150
+ *                 minStock: 20
+ *                 maxStock: 200
+ *                 featured: true
+ *                 categoryId: "clxkz2x1y0000i8uh7b2g5f5e"
+ *                 brandId: "clxkz3a1b0002i8uhf4g9h9j9"
+ *                 tags: ["smartphone", "samsung", "android", "s24 ultra"]
+ *                 seoTitle: "Comprar Samsung Galaxy S24 Ultra | Loja Oficial"
+ *                 seoDescription: "Encontre o melhor preço para o novo Samsung Galaxy S24 Ultra. Câmera de 200MP, performance incrível e design premium. Compre já!"
  *     responses:
  *       201:
  *         description: Produto criado com sucesso.
@@ -278,6 +306,41 @@ const auth = require('../middlewares/auth.middleware');
  *     responses:
  *       200:
  *         description: Produto retornado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *             examples:
+ *               samsungPhone:
+ *                 summary: Exemplo de um celular Samsung
+ *                 value:
+ *                   id: "clxkz5f2q0004i8uhc7a2g6h3"
+ *                   name: "Samsung Galaxy S24 Ultra"
+ *                   slug: "samsung-galaxy-s24-ultra"
+ *                   description: "O mais recente e poderoso smartphone da Samsung, com câmera de 200MP, S Pen integrada e o processador mais rápido da linha Galaxy."
+ *                   shortDescription: "Smartphone topo de linha com S Pen e câmera de 200MP."
+ *                   sku: "SS-S24-ULTRA-BLK"
+ *                   price: 7999.99
+ *                   comparePrice: 8999.99
+ *                   cost: 4500.00
+ *                   weight: 0.232
+ *                   length: 16.23
+ *                   width: 7.9
+ *                   height: 0.86
+ *                   status: "ACTIVE"
+ *                   isDigital: false
+ *                   trackStock: true
+ *                   stock: 150
+ *                   minStock: 20
+ *                   maxStock: 200
+ *                   featured: true
+ *                   categoryId: "clxkz2x1y0000i8uh7b2g5f5e"
+ *                   brandId: "clxkz3a1b0002i8uhf4g9h9j9"
+ *                   tags: ["smartphone", "samsung", "android", "s24 ultra"]
+ *                   seoTitle: "Comprar Samsung Galaxy S24 Ultra | Loja Oficial"
+ *                   seoDescription: "Encontre o melhor preço para o novo Samsung Galaxy S24 Ultra. Câmera de 200MP, performance incrível e design premium. Compre já!"
+ *                   createdAt: "2024-07-21T10:00:00.000Z"
+ *                   updatedAt: "2024-07-22T11:30:00.000Z"
  *       404:
  *         description: Produto não encontrado.
  *       500:
@@ -300,6 +363,13 @@ const auth = require('../middlewares/auth.middleware');
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/ProductUpdate'
+ *           examples:
+ *             updatePriceAndStock:
+ *               summary: Atualiza o preço e o estoque de um produto
+ *               value:
+ *                 price: 7499.90
+ *                 stock: 125
+ *                 status: "ACTIVE"
  *     responses:
  *       200:
  *         description: Produto atualizado com sucesso.

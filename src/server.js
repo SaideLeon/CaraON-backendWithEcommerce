@@ -10,6 +10,7 @@ const agentRoutes = require('./api/agent.routes');
 const productRoutes = require('./api/products.routes');
 const cartRoutes = require('./api/cart.routes');
 const templateRoutes = require('./api/template.routes');
+const toolRoutes = require('./api/tool.routes');
 const webSocketService = require('./services/websocket.service');
 
 // Swagger UI setup
@@ -48,6 +49,7 @@ app.use('/api/v1', agentRoutes);
 app.use('/api/v1', productRoutes);
 app.use('/api/v1', cartRoutes);
 app.use('/api/v1/templates', templateRoutes);
+app.use('/api/v1/tools', toolRoutes);
 
 const server = http.createServer(app);
 webSocketService.init(server);

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const agentController = require('../controllers/agent.controller');
 const { validate } = require('../middlewares/validate.middleware');
-const { createParentAgentSchema, createChildAgentFromTemplateSchema, createCustomChildAgentSchema, listChildAgentsSchema, updateAgentPersonaSchema } = require('../schemas/agent.schema');
+const { createParentAgentSchema, createChildAgentFromTemplateSchema, createCustomChildAgentSchema, listChildAgentsSchema, updateAgentPersonaSchema, exportAgentAnalyticsSchema } = require('../schemas/agent.schema');
 const auth = require('../middlewares/auth.middleware');
 
 /**
@@ -257,6 +257,72 @@ const auth = require('../middlewares/auth.middleware');
  *       500:
  *         description: Falha ao atualizar a persona do agente.
  */
+
+/**
+ * @swagger
+ * /api/v1/agents/analytics/export:
+ *   get:
+ *     summary: Exporta a análise de performance dos agentes em JSON
+ *     tags: [Agentes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: instanceId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: O ID da instância para a qual a análise será gerada.
+ *       - in: query
+ *         name: organizationId
+ *         schema:
+ *           type: string
+ *         description: (Opcional) O ID da organização para filtrar a análise.
+ *     responses:
+ *       200:
+ *         description: Relatório de análise em JSON.
+ *       401:
+ *         description: Não autorizado.
+ *       500:
+ *         description: Falha ao exportar a análise.
+ */
+
+/**
+ * @swagger
+ * /api/v1/agents/analytics/export/csv:
+ *   get:
+ *     summary: Exporta a análise de performance dos agentes em CSV
+ *     tags: [Agentes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: instanceId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: O ID da instância para a qual a análise será gerada.
+ *       - in: query
+ *         name: organizationId
+ *         schema:
+ *           type: string
+ *         description: (Opcional) O ID da organização para filtrar a análise.
+ *     responses:
+ *       200:
+ *         description: Arquivo CSV com a análise de performance dos agentes.
+ *         content:
+ *           text/csv:
+ *             schema:
+ *               type: string
+ *       401:
+ *         description: Não autorizado.
+ *       500:
+ *         description: Falha ao exportar a análise em CSV.
+ */
+
+// Rotas para Análise de Agentes
+router.get('/agents/analytics/export', auth, validate(exportAgentAnalyticsSchema), agentController.exportAgentAnalytics);
+router.get('/agents/analytics/export/csv', auth, validate(exportAgentAnalyticsSchema), agentController.exportAgentAnalyticsCsv);
 
 // Rotas para Hierarquia de Agentes
 router.post('/agents/parent/:instanceId', auth, validate(createParentAgentSchema), agentController.createParentAgent);

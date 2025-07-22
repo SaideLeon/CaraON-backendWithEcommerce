@@ -11,6 +11,7 @@ const {
 const { z } = require('zod');
 const agentHierarchyService = require('../services/agent.hierarchy.service');
 const agentAnalyticsService = require('../services/agent.analytics.service');
+const { Parser } = require('json2csv');
 
 exports.updateAgentPersona = async (req, res) => {
     const { agentId } = req.params;
@@ -122,5 +123,36 @@ exports.exportAgentAnalytics = async (req, res) => {
     } catch (error) {
         console.error("Erro ao exportar análise de agentes:", error);
         res.status(500).json({ error: 'Falha ao exportar a análise de agentes.' });
+    }
+};
+
+exports.exportAgentAnalyticsCsv = async (req, res) => {
+    const { instanceId, organizationId } = req.query;
+
+    try {
+        const report = await agentAnalyticsService.generateOptimizationReport(instanceId, organizationId);
+        
+        const fields = [
+            { label: 'Agent ID', value: 'agent.id' },
+            { label: 'Agent Name', value: 'agent.name' },
+            { label: 'Total Executions', value: 'totalExecutions' },
+            { label: 'Successful Executions', value: 'successfulExecutions' },
+            { label: 'Failed Executions', value: 'failedExecutions' },
+            { label: 'Success Rate (%)', value: 'successRate' },
+            { label: 'Average Execution Time (ms)', value: 'averageExecutionTime' },
+        ];
+
+        const data = Object.values(report.performance);
+
+        const json2csvParser = new Parser({ fields });
+        const csv = json2csvParser.parse(data);
+
+        res.header('Content-Type', 'text/csv');
+        res.attachment('agent_analytics.csv');
+        res.status(200).send(csv);
+
+    } catch (error) {
+        console.error("Erro ao exportar análise de agentes para CSV:", error);
+        res.status(500).json({ error: 'Falha ao exportar a análise de agentes para CSV.' });
     }
 };

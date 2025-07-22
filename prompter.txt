@@ -1,0 +1,29 @@
+usando o esquema abaixo crie example no swagger para products.routes.js, tudo sobre um telefone Sunsumg:
+{
+  "name": "string",
+  "slug": "string",
+  "description": "string",
+  "shortDescription": "string",
+  "sku": "string",
+  "price": 0,
+  "comparePrice": 0,
+  "cost": 0,
+  "weight": 0,
+  "length": 0,
+  "width": 0,
+  "height": 0,
+  "status": "DRAFT",
+  "isDigital": true,
+  "trackStock": true,
+  "stock": 0,
+  "minStock": 0,
+  "maxStock": 0,
+  "featured": true,
+  "categoryId": "string",
+  "brandId": "string",
+  "tags": [
+    "string"
+  ],
+  "seoTitle": "string",
+  "seoDescription": "string"
+}

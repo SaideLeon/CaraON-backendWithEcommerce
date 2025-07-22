@@ -1,7 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-const { createOrganizationSchema, listOrganizationsSchema } = require('../schemas/organization.schema');
-const { z } = require('zod');
+const prisma = new PrismaClient(); 
 
 exports.createOrganization = async (req, res) => {
     const { instanceId } = req.params;
