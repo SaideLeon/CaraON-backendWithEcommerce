@@ -55,6 +55,18 @@ const exportAgentAnalyticsSchema = z.object({
     }),
 });
 
+const getAgentByIdSchema = z.object({
+    params: z.object({
+        agentId: z.string(),
+    }),
+});
+
+const listParentAgentsSchema = z.object({
+    params: z.object({
+        instanceId: z.string(),
+    }),
+});
+
 
 module.exports = {
   updateAgentPersonaSchema,
@@ -63,4 +75,6 @@ module.exports = {
   createCustomChildAgentSchema,
   listChildAgentsSchema,
   exportAgentAnalyticsSchema,
+  getAgentByIdSchema,
+  listParentAgentsSchema,
 };

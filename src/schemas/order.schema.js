@@ -7,6 +7,16 @@ const createOrderSchema = z.object({
   }),
 });
 
+const updateOrderStatusSchema = z.object({
+  body: z.object({
+    status: z.enum(['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELED', 'RETURNED', 'REFUNDED']),
+  }),
+  params: z.object({
+    id: z.string(),
+  }),
+});
+
 module.exports = {
   createOrderSchema,
+  updateOrderStatusSchema,
 };

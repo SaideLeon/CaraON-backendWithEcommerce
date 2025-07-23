@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const agentController = require('../controllers/agent.controller');
 const { validate } = require('../middlewares/validate.middleware');
-const { createParentAgentSchema, createChildAgentFromTemplateSchema, createCustomChildAgentSchema, listChildAgentsSchema, updateAgentPersonaSchema, exportAgentAnalyticsSchema } = require('../schemas/agent.schema');
+const { createParentAgentSchema, createChildAgentFromTemplateSchema, createCustomChildAgentSchema, listChildAgentsSchema, updateAgentPersonaSchema, exportAgentAnalyticsSchema, getAgentByIdSchema, listParentAgentsSchema } = require('../schemas/agent.schema');
 const auth = require('../middlewares/auth.middleware');
 
 /**
@@ -228,6 +228,30 @@ const auth = require('../middlewares/auth.middleware');
 
 /**
  * @swagger
+ * /api/v1/agents/{agentId}:
+ *   get:
+ *     summary: Obtém um agente pelo seu ID
+ *     tags: [Agentes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: agentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: O ID do agente.
+ *     responses:
+ *       200:
+ *         description: Agente retornado com sucesso.
+ *       404:
+ *         description: Agente não encontrado.
+ *       500:
+ *         description: Falha ao obter o agente.
+ */
+
+/**
+ * @swagger
  * /api/v1/agents/{agentId}/persona:
  *   patch:
  *     summary: Atualiza a persona de um agente
@@ -327,10 +351,37 @@ router.get('/agents/analytics/export/csv', auth, validate(exportAgentAnalyticsSc
 // Rotas para Hierarquia de Agentes
 router.post('/agents/parent/:instanceId', auth, validate(createParentAgentSchema), agentController.createParentAgent);
 router.post('/agents/parent/:instanceId/:organizationId', auth, validate(createParentAgentSchema), agentController.createParentAgent);
+
+/**
+ * @swagger
+ * /api/v1/agents/parent/{instanceId}:
+ *   get:
+ *     summary: Lista os Agentes Pais de uma instância
+ *     tags: [Agentes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: instanceId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: O ID da instância.
+ *     responses:
+ *       200:
+ *         description: Lista de agentes pais.
+ *       401:
+ *         description: Não autorizado.
+ *       500:
+ *         description: Falha ao listar os agentes pais.
+ */
+router.get('/agents/parent/:instanceId', auth, validate(listParentAgentsSchema), agentController.listParentAgents);
+
 router.post('/agents/child/from-template/:parentAgentId', auth, validate(createChildAgentFromTemplateSchema), agentController.createChildAgentFromTemplate);
 router.post('/agents/child/custom/:parentAgentId', auth, validate(createCustomChildAgentSchema), agentController.createCustomChildAgent);
 router.get('/agents/child/:parentAgentId', auth, validate(listChildAgentsSchema), agentController.listChildAgents);
 router.patch('/agents/:agentId/persona', auth, validate(updateAgentPersonaSchema), agentController.updateAgentPersona);
+router.get('/agents/:agentId', auth, validate(getAgentByIdSchema), agentController.getAgentById);
 
 
 module.exports = router;

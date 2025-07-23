@@ -2,12 +2,13 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const { registry } = require('../docs/openapi');
 const { z } = require('zod');
-const { createOrderSchema } = require('../schemas/order.schema');
+const { createOrderSchema, updateOrderStatusSchema } = require('../schemas/order.schema');
 
 const OrderSchema = z.object({
   id: z.string().optional(),
   userId: z.string(),
   total: z.number(),
+  status: z.string().optional(),
 });
 
 registry.registerPath({
@@ -106,5 +107,24 @@ exports.getOrderById = async (req, res) => {
     } catch (error) {
         console.error('Erro ao obter pedido:', error);
         res.status(500).json({ error: 'Falha ao obter o pedido.' });
+    }
+};
+
+exports.updateOrderStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    try {
+        const order = await prisma.order.update({
+            where: { id },
+            data: { status },
+        });
+        res.status(200).json(order);
+    } catch (error) {
+        if (error.code === 'P2025') {
+            return res.status(404).json({ error: 'Pedido não encontrado.' });
+        }
+        console.error('Erro ao atualizar status do pedido:', error);
+        res.status(500).json({ error: 'Falha ao atualizar o status do pedido.' });
     }
 };

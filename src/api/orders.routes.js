@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/orders.controller');
 const { validate } = require('../middlewares/validate.middleware');
-const { createOrderSchema } = require('../schemas/order.schema');
+const { createOrderSchema, updateOrderStatusSchema } = require('../schemas/order.schema');
 const auth = require('../middlewares/auth.middleware');
 
 /**
@@ -80,5 +80,42 @@ router.get('/orders', auth, orderController.listOrders);
  *         description: Falha ao obter o pedido.
  */
 router.get('/orders/:id', auth, orderController.getOrderById);
+
+/**
+ * @swagger
+ * /api/v1/orders/{id}/status:
+ *   patch:
+ *     summary: Atualiza o status de um pedido
+ *     tags: [Pedidos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: O ID do pedido.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELED, RETURNED, REFUNDED]
+ *     responses:
+ *       200:
+ *         description: Status do pedido atualizado com sucesso.
+ *       401:
+ *         description: Não autorizado.
+ *       404:
+ *         description: Pedido não encontrado.
+ *       500:
+ *         description: Falha ao atualizar o status do pedido.
+ */
+router.patch('/orders/:id/status', auth, validate(updateOrderStatusSchema), orderController.updateOrderStatus);
 
 module.exports = router;

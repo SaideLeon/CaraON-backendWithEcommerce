@@ -6,7 +6,8 @@ const {
     createChildAgentFromTemplateSchema, 
     createCustomChildAgentSchema, 
     listChildAgentsSchema, 
-    exportAgentAnalyticsSchema
+    exportAgentAnalyticsSchema,
+    listParentAgentsSchema
 } = require('../schemas/agent.schema');
 const { z } = require('zod');
 const agentHierarchyService = require('../services/agent.hierarchy.service');
@@ -114,6 +115,30 @@ exports.listChildAgents = async (req, res) => {
     }
 };
 
+exports.getAgentById = async (req, res) => {
+    const { agentId } = req.params;
+
+    try {
+        const agent = await prisma.agent.findUnique({
+            where: { id: agentId },
+            include: {
+                tools: true,
+                parent: true,
+                children: true,
+            },
+        });
+
+        if (!agent) {
+            return res.status(404).json({ error: 'Agente não encontrado.' });
+        }
+
+        res.status(200).json(agent);
+    } catch (error) {
+        console.error("Erro ao buscar agente por ID:", error);
+        res.status(500).json({ error: 'Falha ao buscar o agente.' });
+    }
+};
+
 exports.exportAgentAnalytics = async (req, res) => {
     const { instanceId, organizationId } = req.query;
 
@@ -154,5 +179,27 @@ exports.exportAgentAnalyticsCsv = async (req, res) => {
     } catch (error) {
         console.error("Erro ao exportar análise de agentes para CSV:", error);
         res.status(500).json({ error: 'Falha ao exportar a análise de agentes para CSV.' });
+    }
+};
+
+exports.listParentAgents = async (req, res) => {
+    const { instanceId } = req.params;
+
+    try {
+        const agents = await prisma.agent.findMany({
+            where: {
+                instanceId: instanceId,
+                type: 'PAI',
+                isActive: true,
+            },
+            include: {
+                organization: true,
+                childAgents: true,
+            }
+        });
+        res.status(200).json(agents);
+    } catch (error) {
+        console.error("Erro ao listar agentes pais:", error);
+        res.status(500).json({ error: 'Falha ao listar os agentes pais.' });
     }
 };
